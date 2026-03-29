@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>NEW INDIA DIGITAL INDIA | Digital Service Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs2-fix/qrcode.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        /* New Theme Variables */
+        :root {
+            --primary: #ff6b35;
+            --primary-dark: #e55a2b;
+            --secondary: #2c3e50;
+            --accent: #00b4d8;
+            --light: #f8f9fa;
+            --dark: #1a1a2e;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%); min-height: 100vh; }
+        
+        /* Modern Navbar */
+        .navbar {
+            background: rgba(255,255,255,0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        }
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-link {
+            font-weight: 500;
+            color: var(--secondary) !important;
+            transition: 0.3s;
+        }
+        .nav-link:hover { color: var(--primary) !important; }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--secondary) 0%, #1e2a3a 100%);
+            color: white;
+            padding: 80px 0;
+            border-radius: 0 0 50px 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,107,53,0.1) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .hero-section h1 { font-weight: 800; margin-bottom: 20px; position: relative; z-index: 1; }
+        .hero-section p { font-size: 1.2rem; position: relative; z-index: 1; }
+        
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            background: white;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        
+        .service-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            background: white;
+        }
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 15px 35px rgba(255,107,53,0.15);
+        }
+        .service-card i { color: var(--primary); transition: 0.3s; }
+        .service-card:hover i { transform: scale(1.1); }
+        
+        /* Wallet Card */
+        .wallet-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 24px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        .wallet-card::after {
+            content: '💰';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            font-size: 100px;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        /* QR Container */
+        .qr-container {
+            background: white;
+            padding: 20px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        /* UPI Card */
+        .upi-card {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border-radius: 24px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .upi-id {
+            background: #f0f2f5;
+            padding: 12px;
+            border-radius: 50px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            word-break: break-all;
+        }
+        .copy-btn {
+            cursor: pointer;
+            color: var(--primary);
+            transition: 0.3s;
+            padding: 8px 15px;
+            border-radius: 50px;
+            background: #f0f2f5;
+        }
+        .copy-btn:hover { background: var(--primary); color: white; }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .status-pending { background: #fef3c7; color: #b45309; }
+        .status-approved { background: #d1fae5; color: #065f46; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+        
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255,107,53,0.4);
+        }
+        .btn-outline-primary {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        .btn-outline-primary:hover { background: var(--primary); color: white; }
+        
+        /* Admin Sidebar */
+        .admin-sidebar {
+            background: linear-gradient(180deg, var(--secondary) 0%, #1a2a3a 100%);
+            border-radius: 24px;
+            padding: 20px;
+            color: white;
+        }
+        .admin-sidebar .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .admin-sidebar .nav-link:hover, .admin-sidebar .nav-link.active {
+            background: rgba(255,107,53,0.8);
+            color: white !important;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--secondary);
+            color: white;
+            padding: 40px 0;
+            margin-top: 50px;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up { animation: fadeInUp 0.6s ease-out; }
+        
+        @media (max-width: 768px) {
+            .hero-section h1 { font-size: 1.8rem; }
+            .admin-sidebar { margin-bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="#"><i class="fas fa-digital-tiling me-2"></i><strong>NEW INDIA DIGITAL INDIA</strong></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto" id="navMenu">
+                <li class="nav-item"><a class="nav-link" href="#" onclick="showHome()"><i class="fas fa-home"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="showServices()"><i class="fas fa-concierge-bell"></i> Services</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="showLoginModal()"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="showRegisterModal()"><i class="fas fa-user-plus"></i> Register</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<div id="homeSection" class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold animate-fade-up">NEW INDIA DIGITAL INDIA</h1>
+        <p class="lead mt-3">Your Trusted Partner for Digital Services | ITR | GST | Insurance | Birth Certificate</p>
+        <button class="btn btn-light btn-lg mt-3" onclick="showRegisterModal()"><i class="fas fa-user-plus"></i> Register Now</button>
+    </div>
+</div>
+
+<!-- Services Preview -->
+<div id="servicesSection" style="display: none;" class="container my-5">
+    <h2 class="text-center mb-4 fw-bold" style="color: var(--secondary);">Our Premium Services</h2>
+    <div class="row g-4" id="servicesPreview"></div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header bg-primary text-white border-0 rounded-top-4">
+                <h5 class="modal-title"><i class="fas fa-sign-in-alt me-2"></i>Login to Your Account</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="loginForm">
+                    <div class="mb-3"><label class="fw-bold">Mobile Number / Email</label><input type="text" class="form-control" id="loginUsername" required placeholder="Enter mobile or email"></div>
+                    <div class="mb-3"><label class="fw-bold">Password</label><input type="password" class="form-control" id="loginPassword" required placeholder="Enter password"></div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-arrow-right me-2"></i>Login</button>
+                </form>
+                <hr>
+                <div class="text-center small">
+                    <p class="mb-1"><strong>Demo Credentials:</strong></p>
+                    <p class="mb-0">Customer: Any mobile/email & password (auto creates wallet with ₹1000)</p>
+                    <p class="mb-0 text-primary">Admin: <strong>admin@newindia.com</strong> / <strong>admin123</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header bg-primary text-white border-0 rounded-top-4">
+                <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Customer Registration</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="registerForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label class="fw-bold">Full Name *</label><input type="text" class="form-control" id="regName" required></div>
+                        <div class="col-md-6 mb-3"><label class="fw-bold">Mobile Number *</label><input type="tel" class="form-control" id="regMobile" required pattern="[0-9]{10}"></div>
+                        <div class="col-md-6 mb-3"><label class="fw-bold">Email *</label><input type="email" class="form-control" id="regEmail" required></div>
+                        <div class="col-md-6 mb-3"><label class="fw-bold">Password *</label><input type="password" class="form-control" id="regPassword" required></div>
+                        <div class="col-md-6 mb-3"><label class="fw-bold">Date of Birth *</label><input type="date" class="form-control" id="regDob" required></div>
+                        <div class="col-md-6 mb-3"><label class="fw-bold">State *</label><select class="form-control" id="regState" required><option value="">Select State</option><option>Haryana</option><option>Uttar Pradesh</option><option>Delhi</option><option>Punjab</option><option>Rajasthan</option><option>Bihar</option><option>Madhya Pradesh</option></select></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-check-circle me-2"></i>Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Container -->
+<div id="dashboardContainer" style="display: none;"></div>
+
+<!-- Footer -->
+<div class="footer text-center" id="footerSection">
+    <div class="container">
+        <p>&copy; 2025 NEW INDIA DIGITAL INDIA. All Rights Reserved.</p>
+        <p>Support: +91-8285728719 | support@newindiadigitalindia.co.in</p>
+    </div>
+</div>
+
+<script>
+    // ======================== DATA STORAGE ========================
+    let users = JSON.parse(localStorage.getItem('nidi_users')) || [];
+    let allRequests = JSON.parse(localStorage.getItem('nidi_requests')) || [];
+    let fundRequests = JSON.parse(localStorage.getItem('nidi_fund_requests')) || [];
+    
+    // UPI Details Only
+    let upiSettings = JSON.parse(localStorage.getItem('nidi_upi_settings')) || {
+        upiId: "8285728719@digikhata",
+        upiName: "NEW INDIA DIGITAL",
+        paymentGatewayUrl: "https://www.amazon.in/pay?merchant=NEWINDIADIGITAL"
+    };
+    
+    let serviceFees = JSON.parse(localStorage.getItem('nidi_service_fees')) || {
+        itr: 499, gst: 599, mobile_recharge: 0, dth_recharge: 0, electricity: 0, insurance: 999, haryana_birth: 299
+    };
+    
+    let currentUser = null;
+    let isAdmin = false;
+    let nextId = allRequests.length > 0 ? Math.max(...allRequests.map(r => r.id)) + 1 : 1;
+    let nextFundId = fundRequests.length > 0 ? Math.max(...fundRequests.map(r => r.id)) + 1 : 1;
+    
+    function saveData() {
+        localStorage.setItem('nidi_users', JSON.stringify(users));
+        localStorage.setItem('nidi_requests', JSON.stringify(allRequests));
+        localStorage.setItem('nidi_fund_requests', JSON.stringify(fundRequests));
+        localStorage.setItem('nidi_upi_settings', JSON.stringify(upiSettings));
+        localStorage.setItem('nidi_service_fees', JSON.stringify(serviceFees));
+    }
+    
+    function showToast(message, isError = false) {
+        let toastDiv = document.createElement('div');
+        toastDiv.className = 'position-fixed bottom-0 end-0 p-3';
+        toastDiv.style.zIndex = '9999';
+        toastDiv.innerHTML = `<div class="toast show" style="background: ${isError ? '#ef4444' : '#ff6b35'}; color: white; border-radius: 12px; min-width: 250px;"><div class="toast-body"><i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'} me-2"></i>${message}</div></div>`;
+        document.body.appendChild(toastDiv);
+        setTimeout(() => toastDiv.remove(), 3000);
+    }
+    
+    function copyToClipboard(text, label) {
+        navigator.clipboard.writeText(text);
+        showToast(`${label} copied to clipboard!`);
+    }
+    
+    function showHome() {
+        document.getElementById('homeSection').style.display = 'block';
+        document.getElementById('servicesSection').style.display = 'none';
+        document.getElementById('dashboardContainer').style.display = 'none';
+        document.getElementById('footerSection').style.display = 'block';
+    }
+    
+    function showServices() {
+        document.getElementById('homeSection').style.display = 'none';
+        document.getElementById('servicesSection').style.display = 'block';
+        document.getElementById('dashboardContainer').style.display = 'none';
+        document.getElementById('footerSection').style.display = 'block';
+        renderServicesPreview();
+    }
+    
+    function renderServicesPreview() {
+        const services = [
+            { name: "ITR Filing", icon: "fa-file-invoice-dollar", price: serviceFees.itr },
+            { name: "GST Filing", icon: "fa-building", price: serviceFees.gst },
+            { name: "Mobile Recharge", icon: "fa-mobile-alt", price: "Variable" },
+            { name: "DTH Recharge", icon: "fa-tv", price: "Variable" },
+            { name: "Electricity Bill", icon: "fa-bolt", price: "Variable" },
+            { name: "Insurance", icon: "fa-shield-alt", price: serviceFees.insurance },
+            { name: "Haryana Birth Certificate", icon: "fa-birthday-cake", price: serviceFees.haryana_birth }
+        ];
+        document.getElementById('servicesPreview').innerHTML = services.map(s => `
+            <div class="col-md-3 col-sm-6"><div class="card service-card p-4 text-center"><i class="fas ${s.icon} fa-3x mb-3"></i><h5>${s.name}</h5><p class="text-primary fw-bold">₹${s.price}</p></div></div>
+        `).join('');
+    }
+    
+    function showLoginModal() { new bootstrap.Modal(document.getElementById('loginModal')).show(); }
+    function showRegisterModal() { new bootstrap.Modal(document.getElementById('registerModal')).show(); }
+    
+    // Register
+    document.getElementById('registerForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let user = {
+            id: "CUST_" + Date.now(),
+            name: document.getElementById('regName').value,
+            mobile: document.getElementById('regMobile').value,
+            email: document.getElementById('regEmail').value,
+            password: btoa(document.getElementById('regPassword').value),
+            dob: document.getElementById('regDob').value,
+            state: document.getElementById('regState').value,
+            wallet: 1000,
+            createdAt: new Date().toISOString()
+        };
+        if(users.find(u => u.mobile === user.mobile || u.email === user.email)) {
+            showToast("Mobile or Email already registered!", true);
+            return;
+        }
+        users.push(user);
+        saveData();
+        showToast("Registration successful! Please login.");
+        bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+    });
+    
+    // Login
+    document.getElementById('loginForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let username = document.getElementById('loginUsername').value;
+        let password = document.getElementById('loginPassword').value;
+        
+        if(username === 'admin@newindia.com' && password === 'admin123') {
+            isAdmin = true;
+            currentUser = { id: 'ADMIN', name: 'Administrator', isAdmin: true };
+            renderAdminDashboard();
+            bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+            return;
+        }
+        
+        let user = users.find(u => (u.mobile === username || u.email === username) && u.password === btoa(password));
+        if(user) {
+            isAdmin = false;
+            currentUser = user;
+            renderCustomerDashboard();
+            bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+        } else {
+            showToast("Invalid credentials!", true);
+        }
+    });
+    
+    function logout() {
+        currentUser = null;
+        isAdmin = false;
+        showHome();
+        showToast("Logged out successfully!");
+    }
+    
+    // ======================== SERVICE DEFINITIONS ========================
+    const SERVICES = [
+        { id: "itr", name: "ITR Filing", icon: "fa-file-invoice-dollar", fee: () => serviceFees.itr,
+          fields: [
+            { name: "fullName", label: "Full Name", type: "text", required: true },
+            { name: "panNumber", label: "PAN Number", type: "text", required: true },
+            { name: "income", label: "Annual Income (₹)", type: "number", required: true },
+            { name: "password", label: "ITR Portal Password", type: "password", required: true },
+            { name: "contactNo", label: "Contact Number", type: "tel", required: true },
+            { name: "remark", label: "Reason for ITR Filing", type: "textarea", required: false }
+          ], submitMsg: "ITR filing request submitted!" },
+        { id: "gst", name: "GST Filing", icon: "fa-building", fee: () => serviceFees.gst,
+          fields: [
+            { name: "companyName", label: "Company Name", type: "text", required: true },
+            { name: "gstNumber", label: "GST Number", type: "text", required: true },
+            { name: "contactPerson", label: "Contact Person", type: "text", required: true },
+            { name: "mobileNo", label: "Mobile Number", type: "tel", required: true }
+          ], submitMsg: "GST filing request submitted!" },
+        { id: "mobile_recharge", name: "Mobile Recharge", icon: "fa-mobile-alt", fee: () => 0,
+          fields: [
+            { name: "mobileNo", label: "Mobile Number", type: "tel", required: true, pattern: "[0-9]{10}" },
+            { name: "operator", label: "Operator", type: "select", options: ["Jio", "Airtel", "Vi", "BSNL"], required: true },
+            { name: "amount", label: "Recharge Amount (₹)", type: "number", required: true, min: 10 }
+          ], submitMsg: "Mobile recharge request initiated!" },
+        { id: "dth_recharge", name: "DTH Recharge", icon: "fa-tv", fee: () => 0,
+          fields: [
+            { name: "dthNo", label: "DTH Customer ID", type: "text", required: true },
+            { name: "operator", label: "DTH Operator", type: "select", options: ["Tata Play", "Airtel Digital TV", "Dish TV"], required: true },
+            { name: "amount", label: "Recharge Amount (₹)", type: "number", required: true, min: 50 }
+          ], submitMsg: "DTH recharge request placed!" },
+        { id: "electricity", name: "Electricity Bill", icon: "fa-bolt", fee: () => 0,
+          fields: [
+            { name: "companyName", label: "Electricity Company", type: "select", options: ["UHBVN", "DHBVN", "TPDDL", "BSES"], required: true },
+            { name: "consumerNo", label: "Consumer Number", type: "text", required: true },
+            { name: "billAmount", label: "Bill Amount (₹)", type: "number", required: true, min: 50 }
+          ], submitMsg: "Electricity bill payment request submitted!" },
+        { id: "insurance", name: "Insurance Service", icon: "fa-shield-alt", fee: () => serviceFees.insurance,
+          fields: [
+            { name: "vehicleNumber", label: "Vehicle Number", type: "text", required: true },
+            { name: "insuranceType", label: "Insurance Type", type: "select", options: ["Comprehensive", "Third Party", "Two Wheeler"], required: true },
+            { name: "contactNumber", label: "Contact Number", type: "tel", required: true }
+          ], submitMsg: "Insurance request submitted!" },
+        { id: "haryana_birth", name: "Haryana Birth Certificate", icon: "fa-birthday-cake", fee: () => serviceFees.haryana_birth,
+          fields: [
+            { name: "certificateNumber", label: "Birth Certificate Number", type: "text", required: true },
+            { name: "childName", label: "Name on Certificate", type: "text", required: true },
+            { name: "gender", label: "Gender", type: "select", options: ["Male", "Female", "Other"], required: true },
+            { name: "fatherName", label: "Father's Name", type: "text", required: true },
+            { name: "fatherAadhaar", label: "Father's Aadhaar Number", type: "text", required: true, pattern: "[0-9]{12}" },
+            { name: "motherName", label: "Mother's Name", type: "text", required: true },
+            { name: "motherAadhaar", label: "Mother's Aadhaar Number", type: "text", required: true, pattern: "[0-9]{12}" },
+            { name: "address", label: "Residential Address", type: "textarea", required: true }
+          ], submitMsg: "Haryana Birth Certificate request submitted!" }
+    ];
+    
+    function addRequest(service, formData, totalAmount) {
+        let newRequest = { id: nextId++, customerId: currentUser.id, customerName: currentUser.name, serviceName: service.name, data: formData, amount: totalAmount, status: "pending", submittedAt: new Date().toLocaleString(), adminRemarks: "" };
+        allRequests.push(newRequest);
+        saveData();
+        return newRequest;
+    }
+    
+    function addFundRequest(amount, utr) {
+        let newFund = { id: nextFundId++, customerId: currentUser.id, customerName: currentUser.name, amount: amount, utr: utr, status: "pending", submittedAt: new Date().toLocaleString() };
+        fundRequests.push(newFund);
+        saveData();
+        return newFund;
+    }
+    
+    // ======================== CUSTOMER DASHBOARD WITH UPI ========================
+    function renderCustomerDashboard() {
+        document.getElementById('homeSection').style.display = 'none';
+        document.getElementById('servicesSection').style.display = 'none';
+        document.getElementById('dashboardContainer').style.display = 'block';
+        document.getElementById('footerSection').style.display = 'block';
+        
+        let balance = currentUser.wallet || 0;
+        let requests = allRequests.filter(r => r.customerId === currentUser.id);
+        let fundReqs = fundRequests.filter(f => f.customerId === currentUser.id);
+        
+        let servicesHtml = SERVICES.map(s => `
+            <div class="col-md-3 col-sm-6 mb-3"><div class="card service-card p-3 text-center" onclick="showServiceForm('${s.id}')"><i class="fas ${s.icon} fa-2x mb-2"></i><h6>${s.name}</h6><small class="text-primary fw-bold">₹${s.fee()}</small></div></div>
+        `).join('');
+        
+        let requestsHtml = requests.length === 0 ? '<p class="text-muted">No requests submitted yet.</p>' : 
+            requests.map(r => `<div class="border-bottom p-2"><div class="d-flex justify-content-between"><strong>#${r.id} - ${r.serviceName}</strong><span class="status-badge status-${r.status}">${r.status}</span></div><small>Amount: ₹${r.amount} | ${r.submittedAt}</small></div>`).join('');
+        
+        let fundsHtml = fundReqs.length === 0 ? '<p class="text-muted">No fund requests yet.</p>' :
+            fundReqs.map(f => `<div class="border-bottom p-2"><div class="d-flex justify-content-between"><strong>#${f.id}</strong><span class="status-badge status-${f.status}">${f.status}</span></div><small>₹${f.amount} | UTR: ${f.utr} | ${f.submittedAt}</small></div>`).join('');
+        
+        let upiString = `upi://pay?pa=${upiSettings.upiId}&pn=${encodeURIComponent(upiSettings.upiName)}&cu=INR`;
+        
+        document.getElementById('dashboardContainer').innerHTML = `
+            <div class="container-fluid mt-3 animate-fade-up"><div class="row"><div class="col-md-3">
+                <div class="card p-3 mb-3"><h5><i class="fas fa-user-circle" style="color: var(--primary);"></i> ${currentUser.name}</h5><p class="mb-0"><i class="fas fa-phone"></i> ${currentUser.mobile}<br><i class="fas fa-envelope"></i> ${currentUser.email}</p></div>
+                
+                <div class="wallet-card mb-3"><h5><i class="fas fa-wallet"></i> Wallet Balance</h5><h2 class="display-5">₹${balance}</h2><button class="btn btn-light mt-2" onclick="showAddFundsModal()"><i class="fas fa-plus"></i> Add Funds</button></div>
+                
+                <!-- UPI Payment Card -->
+                <div class="upi-card mb-3"><h6><i class="fab fa-google-pay"></i> Pay via UPI</h6>
+                    <div class="upi-id mb-3">${upiSettings.upiId} <i class="fas fa-copy copy-btn ms-2" onclick="copyToClipboard('${upiSettings.upiId}', 'UPI ID')"></i></div>
+                    <div id="qrcode" class="qr-code mb-3"></div>
+                    <p class="small text-muted">Scan QR code with any UPI app (Google Pay, PhonePe, Paytm)</p>
+                    <button class="btn btn-outline-primary w-100" onclick="copyToClipboard('${upiSettings.upiId}', 'UPI ID')"><i class="fas fa-copy"></i> Copy UPI ID</button>
+                </div>
+                
+                <a href="${upiSettings.paymentGatewayUrl}" target="_blank" class="btn btn-primary w-100"><i class="fab fa-amazon"></i> Pay via Amazon Pay</a>
+                </div>
+                
+                <div class="col-md-9"><div class="card p-3 mb-3"><h5><i class="fas fa-concierge-bell"></i> Our Services</h5><div class="row g-2">${servicesHtml}</div></div>
+                <div class="card p-3 mb-3"><h5><i class="fas fa-history"></i> My Service Requests</h5>${requestsHtml}</div>
+                <div class="card p-3"><h5><i class="fas fa-rupee-sign"></i> Fund Requests History</h5>${fundsHtml}</div>
+                <div class="text-end mt-3"><button class="btn btn-secondary" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div></div></div></div>`;
+        
+        setTimeout(() => {
+            if(document.getElementById('qrcode')) {
+                new QRCode(document.getElementById('qrcode'), {
+                    text: upiString,
+                    width: 180,
+                    height: 180,
+                    colorDark: "#ff6b35",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            }
+        }, 100);
+        
+        window.showServiceForm = showServiceForm;
+        window.showAddFundsModal = showAddFundsModal;
+        window.copyToClipboard = copyToClipboard;
+    }
+    
+    function showAddFundsModal() {
+        let modalHtml = `<div class="modal fade" id="fundModal"><div class="modal-dialog"><div class="modal-content border-0 rounded-4"><div class="modal-header bg-primary text-white border-0 rounded-top-4"><h5><i class="fas fa-rupee-sign me-2"></i>Add Funds to Wallet</h5><button class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body p-4">
+                <div class="alert alert-info"><i class="fas fa-info-circle me-2"></i>Pay to UPI ID: <strong>${upiSettings.upiId}</strong> and enter UTR number below</div>
+                <form id="fundForm">
+                    <div class="mb-3"><label class="fw-bold">Amount (₹) *</label><input type="number" class="form-control" id="fundAmount" required min="100" placeholder="Enter amount"></div>
+                    <div class="mb-3"><label class="fw-bold">UTR Number (Transaction Reference) *</label><input type="text" class="form-control" id="fundUtr" required placeholder="Enter UTR number from UPI transaction"></div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-check-circle me-2"></i>Submit Fund Request</button>
+                </form>
+            </div></div></div></div>`;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        let modal = new bootstrap.Modal(document.getElementById('fundModal'));
+        modal.show();
+        document.getElementById('fundForm').onsubmit = (e) => {
+            e.preventDefault();
+            addFundRequest(parseInt(document.getElementById('fundAmount').value), document.getElementById('fundUtr').value);
+            showToast("Fund request submitted! Awaiting admin approval.");
+            modal.hide();
+            document.getElementById('fundModal').remove();
+            renderCustomerDashboard();
+        };
+    }
+    
+    function showServiceForm(serviceId) {
+        let service = SERVICES.find(s => s.id === serviceId);
+        if(!service) return;
+        
+        let fieldsHtml = service.fields.map(f => {
+            if(f.type === 'select') return `<div class="mb-3"><label class="fw-bold">${f.label} *</label><select name="${f.name}" class="form-control" required>${f.options.map(o => `<option value="${o}">${o}</option>`).join('')}</select></div>`;
+            if(f.type === 'textarea') return `<div class="mb-3"><label class="fw-bold">${f.label}</label><textarea name="${f.name}" rows="2" class="form-control"></textarea></div>`;
+            return `<div class="mb-3"><label class="fw-bold">${f.label} *</label><input type="${f.type}" name="${f.name}" class="form-control" ${f.pattern ? `pattern="${f.pattern}"` : ''} required></div>`;
+        }).join('');
+        
+        let modalHtml = `<div class="modal fade" id="serviceModal"><div class="modal-dialog modal-lg"><div class="modal-content border-0 rounded-4"><div class="modal-header bg-primary text-white border-0 rounded-top-4"><h5><i class="fas ${service.icon} me-2"></i>${service.name}</h5><button class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body p-4"><form id="serviceForm">${fieldsHtml}<div class="alert alert-primary">Service Fee: <strong>₹${service.fee()}</strong></div><button type="submit" class="btn btn-primary w-100"><i class="fas fa-credit-card me-2"></i>Pay ₹${service.fee()} & Submit</button></form></div></div></div></div>`;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        let modal = new bootstrap.Modal(document.getElementById('serviceModal'));
+        modal.show();
+        
+        document.getElementById('serviceForm').onsubmit = (e) => {
+            e.preventDefault();
+            let fd = new FormData(e.target);
+            let data = {};
+            for(let [k,v] of fd.entries()) { data[k] = v; }
+            
+            let totalAmount = service.fee();
+            if(service.id === 'mobile_recharge' && data.amount) totalAmount += parseInt(data.amount);
+            if(service.id === 'dth_recharge' && data.amount) totalAmount += parseInt(data.amount);
+            if(service.id === 'electricity' && data.billAmount) totalAmount += parseInt(data.billAmount);
+            
+            if(currentUser.wallet < totalAmount) { showToast(`Insufficient balance! Need ₹${totalAmount}`, true); return; }
+            
+            currentUser.wallet -= totalAmount;
+            let userIndex = users.findIndex(u => u.id === currentUser.id);
+            if(userIndex !== -1) users[userIndex].wallet = currentUser.wallet;
+            saveData();
+            
+            addRequest(service, data, totalAmount);
+            showToast(`${service.submitMsg} ₹${totalAmount} deducted from wallet.`);
+            modal.hide();
+            document.getElementById('serviceModal').remove();
+            renderCustomerDashboard();
+        };
+    }
+    
+    // ======================== ADMIN DASHBOARD ========================
+    function renderAdminDashboard() {
+        document.getElementById('homeSection').style.display = 'none';
+        document.getElementById('servicesSection').style.display = 'none';
+        document.getElementById('dashboardContainer').style.display = 'block';
+        document.getElementById('footerSection').style.display = 'block';
+        
+        document.getElementById('dashboardContainer').innerHTML = `
+            <div class="container-fluid mt-3"><div class="row"><div class="col-md-2"><div class="admin-sidebar"><h5 class="mb-3"><i class="fas fa-cog"></i> Admin Panel</h5>
+            <nav class="nav flex-column"><div class="nav-link active" onclick="showAdminTab('requests')"><i class="fas fa-list"></i> Service Requests</div>
+            <div class="nav-link" onclick="showAdminTab('funds')"><i class="fas fa-rupee-sign"></i> Fund Requests</div>
+            <div class="nav-link" onclick="showAdminTab('settings')"><i class="fas fa-sliders-h"></i> UPI Settings</div>
+            <div class="nav-link" onclick="showAdminTab('fees')"><i class="fas fa-tags"></i> Service Fees</div>
+            <div class="nav-link" onclick="showAdminTab('users')"><i class="fas fa-users"></i> Customers</div>
+            <div class="nav-link" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</div></nav></div></div>
+            <div class="col-md-10"><div id="adminContent"></div></div></div></div>`;
+        
+        window.showAdminTab = showAdminTab;
+        showAdminTab('requests');
+    }
+    
+    function showAdminTab(tab) {
+        if(tab === 'requests') {
+            let html = `<div class="card p-3"><h4><i class="fas fa-list"></i> Service Requests</h4><div class="table-responsive"><table class="table"><thead class="table-light"><tr><th>ID</th><th>Customer</th><th>Service</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
+            allRequests.forEach(r => {
+                html += `<tr><td>${r.id}</td><td>${r.customerName}</td><td>${r.serviceName}</td><td>₹${r.amount}</td>
+                <td><span class="status-badge status-${r.status}">${r.status}</span></td>
+                <td><button class="btn btn-sm btn-success me-1" onclick="updateRequestStatus(${r.id},'approved')">Approve</button>
+                <button class="btn btn-sm btn-danger me-1" onclick="updateRequestStatus(${r.id},'rejected')">Reject</button>
+                <button class="btn btn-sm btn-info" onclick="generateReceipt(${r.id})">Receipt</button></td></tr>`;
+            });
+            html += `</tbody></table></div></div>`;
+            document.getElementById('adminContent').innerHTML = html;
+        } else if(tab === 'funds') {
+            let html = `<div class="card p-3"><h4><i class="fas fa-rupee-sign"></i> Fund Requests</h4><div class="table-responsive"><table class="table"><thead class="table-light"><tr><th>ID</th><th>Customer</th><th>Amount</th><th>UTR</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
+            fundRequests.forEach(f => {
+                html += `<tr><td>${f.id}</td><td>${f.customerName}</td><td>₹${f.amount}</td><td>${f.utr}</td>
+                <td><span class="status-badge status-${f.status}">${f.status}</span></td>
+                <td>${f.status === 'pending' ? `<button class="btn btn-sm btn-success" onclick="approveFund(${f.id})">Approve</button>
+                <button class="btn btn-sm btn-danger" onclick="rejectFund(${f.id})">Reject</button>` : '-'}</td></tr>`;
+            });
+            html += `</tbody></table></div></div>`;
+            document.getElementById('adminContent').innerHTML = html;
+        } else if(tab === 'settings') {
+            document.getElementById('adminContent').innerHTML = `<div class="card p-3"><h4><i class="fab fa-google-pay"></i> UPI Payment Settings</h4>
+                <form id="upiForm"><div class="mb-3"><label class="fw-bold">UPI ID</label><input type="text" class="form-control" id="upiId" value="${upiSettings.upiId}" required></div>
+                <div class="mb-3"><label class="fw-bold">UPI Display Name</label><input type="text" class="form-control" id="upiName" value="${upiSettings.upiName}" required></div>
+                <div class="mb-3"><label class="fw-bold">Amazon Pay Gateway URL</label><input type="url" class="form-control" id="paymentUrl" value="${upiSettings.paymentGatewayUrl}"></div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Update Settings</button></form></div>`;
+            document.getElementById('upiForm').onsubmit = (e) => {
+                e.preventDefault();
+                upiSettings.upiId = document.getElementById('upiId').value;
+                upiSettings.upiName = document.getElementById('upiName').value;
+                upiSettings.paymentGatewayUrl = document.getElementById('paymentUrl').value;
+                saveData();
+                showToast("UPI settings updated successfully!");
+                renderAdminDashboard();
+            };
+        } else if(tab === 'fees') {
+            document.getElementById('adminContent').innerHTML = `<div class="card p-3"><h4><i class="fas fa-tags"></i> Service Fee Management</h4>
+                <form id="feeForm"><div class="row"><div class="col-md-6 mb-3"><label>ITR Filing Fee (₹)</label><input type="number" class="form-control" id="fee_itr" value="${serviceFees.itr}"></div>
+                <div class="col-md-6 mb-3"><label>GST Filing Fee (₹)</label><input type="number" class="form-control" id="fee_gst" value="${serviceFees.gst}"></div>
+                <div class="col-md-6 mb-3"><label>Insurance Fee (₹)</label><input type="number" class="form-control" id="fee_insurance" value="${serviceFees.insurance}"></div>
+                <div class="col-md-6 mb-3"><label>Haryana Birth Certificate Fee (₹)</label><input type="number" class="form-control" id="fee_haryana" value="${serviceFees.haryana_birth}"></div></div>
+                <button type="submit" class="btn btn-primary">Update Fees</button></form></div>`;
+            document.getElementById('feeForm').onsubmit = (e) => {
+                e.preventDefault();
+                serviceFees.itr = parseInt(document.getElementById('fee_itr').value);
+                serviceFees.gst = parseInt(document.getElementById('fee_gst').value);
+                serviceFees.insurance = parseInt(document.getElementById('fee_insurance').value);
+                serviceFees.haryana_birth = parseInt(document.getElementById('fee_haryana').value);
+                saveData();
+                showToast("Service fees updated successfully!");
+            };
+        } else if(tab === 'users') {
+            let html = `<div class="card p-3"><h4><i class="fas fa-users"></i> Registered Customers</h4><div class="table-responsive"><table class="table"><thead class="table-light"><tr><th>ID</th><th>Name</th><th>Mobile</th><th>Email</th><th>State</th><th>Wallet</th></tr></thead><tbody>`;
+            users.forEach(u => {
+                html += `<tr><td>${u.id.substring(0,15)}</td><td>${u.name}</td><td>${u.mobile}</td><td>${u.email}</td><td>${u.state}</td><td>₹${u.wallet}</td></tr>`;
+            });
+            html += `</tbody></table></div></div>`;
+            document.getElementById('adminContent').innerHTML = html;
+        }
+    }
+    
+    function updateRequestStatus(id, status) {
+        let req = allRequests.find(r => r.id === id);
+        if(req) { req.status = status; saveData(); showToast(`Request #${id} ${status}!`); showAdminTab('requests'); }
+    }
+    
+    function generateReceipt(id) {
+        let req = allRequests.find(r => r.id === id);
+        if(req) {
+            let receiptHtml = `<div style="max-width:500px;margin:0 auto;padding:30px;background:white;border-radius:20px;"><h3 class="text-center" style="color:#ff6b35;">NEW INDIA DIGITAL INDIA</h3><hr><p><strong>Receipt No:</strong> RCP-${req.id}</p><p><strong>Customer:</strong> ${req.customerName}</p><p><strong>Service:</strong> ${req.serviceName}</p><p><strong>Amount:</strong> ₹${req.amount}</p><p><strong>Status:</strong> ${req.status.toUpperCase()}</p><p><strong>Date:</strong> ${req.submittedAt}</p><hr><p class="text-center">Thank you for choosing NEW INDIA DIGITAL INDIA!</p></div>`;
+            let win = window.open();
+            win.document.write(`<html><head><title>Receipt #${req.id}</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></head><body class="p-4">${receiptHtml}<div class="text-center mt-3"><button class="btn btn-primary" onclick="window.print()">Print Receipt</button></div></body></html>`);
+            win.document.close();
+        }
+    }
+    
+    function approveFund(id) {
+        let fund = fundRequests.find(f => f.id === id);
+        if(fund && fund.status === "pending") {
+            fund.status = "approved";
+            let user = users.find(u => u.id === fund.customerId);
+            if(user) { user.wallet += fund.amount; saveData(); }
+            showToast(`Fund request #${id} approved! ₹${fund.amount} added.`);
+            showAdminTab('funds');
+        }
+    }
+    
+    function rejectFund(id) {
+        let fund = fundRequests.find(f => f.id === id);
+        if(fund) { fund.status = "rejected"; saveData(); showToast(`Fund request #${id} rejected!`); showAdminTab('funds'); }
+    }
+    
+    window.updateRequestStatus = updateRequestStatus;
+    window.generateReceipt = generateReceipt;
+    window.approveFund = approveFund;
+    window.rejectFund = rejectFund;
+    window.showHome = showHome;
+    window.showServices = showServices;
+    window.showLoginModal = showLoginModal;
+    window.showRegisterModal = showRegisterModal;
+    window.logout = logout;
+    
+    renderServicesPreview();
+</script>
+</body>
+</html>
